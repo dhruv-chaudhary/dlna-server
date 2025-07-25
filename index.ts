@@ -1,12 +1,16 @@
 import { startSSDPBroadcast } from "./lib/dlna/broadcast";
 import { getBrowseResponseXml, getCdsXml, getDescriptionXml } from "./lib/dlna/xml-templates";
-import { HTTP_PORT, MEDIA_DIR, SERVER_NAME } from "./lib/dlna/config";
+import { HTTP_PORT, MEDIA_DIR, SERVER_NAME, SERVER_URL } from "./lib/dlna/config";
 import fs from "fs-extra";
 import mime from "mime";
 import { hasText } from "./lib/utils/common";
+import { scanMedia } from "./lib/scanner";
+import path from "path";
 
 // Start SSDP broadcast
 startSSDPBroadcast();
+
+const mediaFiles = scanMedia(MEDIA_DIR);
 
 function sendXml(xml: string) {
   return new Response(xml, {
@@ -30,13 +34,9 @@ const server = Bun.serve({
     "/cds-control": {
       POST: async (req) => {
         const body = await req.text();
-        console.log("--- Incoming /cds-control request ---");
-        console.log(body);
         if (body.includes("Browse")) {
           // TODO: Discover files in MEDIA_DIR instead of hardcoding sample.mp4
-          const resultXML = getBrowseResponseXml("sample.mp4");
-          console.log("--- Sending BrowseResponse ---");
-          console.log(resultXML);
+          const resultXML = getBrowseResponseXml(mediaFiles);
           return new Response(resultXML, {
             headers: {
               "Content-Type": 'text/xml; charset="utf-8"',
@@ -50,9 +50,9 @@ const server = Bun.serve({
         return new Response("Invalid request", { status: 400 });
       },
     },
-    "/media/:filename": {
+    "/media/*": {
       HEAD: (req) => {
-        const { filename } = req.params;
+        const filename = path.relative(`${SERVER_URL}/media`, req.url);
         const filepath = `${MEDIA_DIR}/${filename}`;
         if (!filepath || !fs.pathExistsSync(filepath)) {
           return Response.json({ error: "File not found" }, { status: 404 });
@@ -66,7 +66,7 @@ const server = Bun.serve({
         });
       },
       GET: (req) => {
-        const { filename } = req.params;
+        const filename = path.relative(`${SERVER_URL}/media`, req.url);
         const filepath = `${MEDIA_DIR}/${filename}`;
         if (!filepath || !fs.pathExistsSync(filepath)) {
           return Response.json({ error: "File not found" }, { status: 404 });

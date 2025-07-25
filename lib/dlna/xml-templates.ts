@@ -138,7 +138,7 @@ export function getCdsXml() {
   `.trim();
 }
 
-export function getBrowseResponseXml(filename: string) {
+export function getBrowseResponseXml(mediaFiles: string[]) {
   return `
     <?xml version="1.0"?>
     <s:Envelope
@@ -148,10 +148,10 @@ export function getBrowseResponseXml(filename: string) {
             <u:BrowseResponse
                 xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">
                 <Result>
-                    <![CDATA[${getDIDLItemXml(`${SERVER_URL}/media/${filename}`)}]]>
+                    <![CDATA[${getDIDLItemXml(mediaFiles)}]]>
                 </Result>
-                <NumberReturned>1</NumberReturned>
-                <TotalMatches>1</TotalMatches>
+                <NumberReturned>${mediaFiles.length}</NumberReturned>
+                <TotalMatches>${mediaFiles.length}</TotalMatches>
                 <UpdateID>1</UpdateID>
             </u:BrowseResponse>
         </s:Body>
@@ -159,17 +159,22 @@ export function getBrowseResponseXml(filename: string) {
     `.trim();
 }
 
-function getDIDLItemXml(videoUrl: string) {
+function getDIDLItemXml(mediaFiles: string[]) {
+  const items = mediaFiles.map((file, index) => {
+    return `
+        <item id="${index + 1}" parentID="0" restricted="1">
+            <dc:title>${file}</dc:title>
+            <res protocolInfo="http-get:*:video/mp4:*">${SERVER_URL}/media/${file}</res>
+            <upnp:class>object.item.videoItem.movie</upnp:class>
+        </item>
+    `.trim();
+  });
   return `
     <?xml version="1.0" encoding="UTF-8"?>
     <DIDL-Lite xmlns:dc="http://purl.org/dc/elements/1.1/"
             xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/"
             xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/">
-        <item id="1" parentID="0" restricted="1">
-            <dc:title>Sample Video</dc:title>
-            <res protocolInfo="http-get:*:video/mp4:*">${videoUrl}</res>
-            <upnp:class>object.item.videoItem.movie</upnp:class>
-        </item>
+        ${items.join("\n")}
     </DIDL-Lite>
   `.trim();
 }

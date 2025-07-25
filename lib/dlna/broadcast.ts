@@ -54,7 +54,7 @@ export async function startSSDPBroadcast() {
       `USN: ${getOrCreateUUID()}::${DLNA_DEVICE_TYPE}`,
       `SERVER: ${SERVER_NAME}`,
       "CACHE-CONTROL: max-age=1800",
-      `LOCATION: http://${localIP}:3000/description.xml`,
+      `LOCATION: ${SERVER_URL}/description.xml`,
       "",
       "",
     ].join("\r\n");
@@ -70,7 +70,7 @@ export async function startSSDPBroadcast() {
       `CACHE-CONTROL: max-age=1800`,
       `DATE: ${new Date().toUTCString()}`,
       `EXT:`,
-      `LOCATION: http://${localIP}:3000/description.xml`,
+      `LOCATION: ${SERVER_URL}/description.xml`,
       `SERVER: ${SERVER_NAME}`,
       `ST: ${DLNA_DEVICE_TYPE}`,
       `USN: ${getOrCreateUUID()}::${DLNA_DEVICE_TYPE}`,
