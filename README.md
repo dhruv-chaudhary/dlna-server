@@ -102,6 +102,7 @@ File type detection is handled automatically using MIME types.
 
 ## Roadmap
 
+- **Media Discovery**: Add support for scanning the media folder to discover video files automatically
 - **Support more video formats**: Add support for additional video formats beyond MP4 (AVI, MKV, MOV, etc.)
 
 ## Contributing
