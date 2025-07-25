@@ -1,6 +1,6 @@
 # DLNA Server
 
-A lightweight DLNA (Digital Living Network Alliance) media server built with [Bun](https://bun.sh) and TypeScript. This server allows you to stream media files from your computer to DLNA-compatible devices like smart TVs, gaming consoles, and media players on your local network.
+A blazing fast DLNA media server built with Bun and TypeScript — stream your local videos to any device on your network.
 
 ## Features
 
@@ -35,7 +35,7 @@ bun install
 
 ### Quick Start
 
-1. Place your media files in the `media/` directory (or configure a custom directory)
+1. Drop your `.mp4` files into the `media/` folder (or set `MEDIA_DIR`)
 
 2. Start the server:
 
@@ -43,7 +43,7 @@ bun install
 bun run index.ts
 ```
 
-3. The server will start on `http://localhost:3000` and begin broadcasting its presence on the network
+3. The server will start on `http://<your-ip>:3000` (auto-broadcasts over DLNA) and begin broadcasting its presence on the network
 
 4. Look for the server on your DLNA-compatible devices (smart TVs, media players, etc.)
 
@@ -87,23 +87,6 @@ File type detection is handled automatically using MIME types.
 - `/cds-control` - Content Directory Service control point
 - `/media/:filename` - Media file streaming with range request support
 
-## Project Structure
-
-```
-dlna-server/
-├── index.ts              # Main server entry point
-├── lib/
-│   ├── dlna/
-│   │   ├── broadcast.ts  # SSDP network discovery
-│   │   ├── config.ts     # Server configuration
-│   │   ├── utils.ts      # DLNA utilities
-│   │   └── xml-templates.ts # DLNA XML response templates
-│   └── utils/
-│       └── common.ts     # Common utilities
-├── media/                # Media files directory
-└── package.json
-```
-
 ## How It Works
 
 1. **Network Discovery**: The server broadcasts its presence using SSDP (Simple Service Discovery Protocol) on the local network
@@ -120,6 +103,10 @@ dlna-server/
 ## Roadmap
 
 - **Support more video formats**: Add support for additional video formats beyond MP4 (AVI, MKV, MOV, etc.)
+
+## Contributing
+
+Pull requests are welcome! If you have suggestions, ideas, or fixes, feel free to open an issue or submit a PR.
 
 ## Development
 
