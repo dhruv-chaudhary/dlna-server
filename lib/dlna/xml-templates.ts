@@ -164,7 +164,7 @@ function getDIDLItemXml(mediaFiles: string[]) {
     return `
         <item id="${index + 1}" parentID="0" restricted="1">
             <dc:title>${file}</dc:title>
-            <res protocolInfo="http-get:*:video/mp4:*">${SERVER_URL}/media/${file}</res>
+            <res protocolInfo="http-get:*:video/mp4:*">${SERVER_URL}/media/${encodeURIComponent(file)}</res>
             <upnp:class>object.item.videoItem.movie</upnp:class>
         </item>
     `.trim();

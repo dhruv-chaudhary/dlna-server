@@ -52,7 +52,7 @@ const server = Bun.serve({
     },
     "/media/*": {
       HEAD: (req) => {
-        const filename = path.relative(`${SERVER_URL}/media`, req.url);
+        const filename = decodeURIComponent(path.relative(`${SERVER_URL}/media`, req.url));
         const filepath = `${MEDIA_DIR}/${filename}`;
         if (!filepath || !fs.pathExistsSync(filepath)) {
           return Response.json({ error: "File not found" }, { status: 404 });
@@ -66,7 +66,7 @@ const server = Bun.serve({
         });
       },
       GET: (req) => {
-        const filename = path.relative(`${SERVER_URL}/media`, req.url);
+        const filename = decodeURIComponent(path.relative(`${SERVER_URL}/media`, req.url));
         const filepath = `${MEDIA_DIR}/${filename}`;
         if (!filepath || !fs.pathExistsSync(filepath)) {
           return Response.json({ error: "File not found" }, { status: 404 });
