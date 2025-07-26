@@ -92,6 +92,15 @@ File type detection is handled automatically using MIME types.
 - `/cds-control` - Content Directory Service control point
 - `/media/:filename` - Media file streaming with range request support
 
+## Tested DLNA Clients
+
+The server has been tested and confirmed to work with the following DLNA clients:
+
+- **VLC Media Player** (Windows, macOS)
+- **Skybox VR** (Meta Quest 3 headset)
+
+Note: Other DLNA clients might work but have not been tested.
+
 ## How It Works
 
 1. **Media Scanning**: On startup, the server scans the configured media directory for supported video files
